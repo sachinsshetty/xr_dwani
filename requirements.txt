@@ -1,2 +1,4 @@
 opencv-python
-openai
+dwani
+sounddevice
+scipy

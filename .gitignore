@@ -6,6 +6,7 @@ src/ollama
 pyautogenvenv/
 venv/
 *.png
+*.wav
 venv_2
 # Byte-compiled / optimized / DLL files
 __pycache__/
