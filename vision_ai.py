@@ -2,6 +2,8 @@ import cv2
 import dwani
 
 import os
+from playsound import playsound
+
 
 # Set API key and base URL
 dwani.api_key = os.getenv("DWANI_API_KEY")
@@ -64,3 +66,13 @@ if __name__ == "__main__":
             )
     print("Vision Response: ", result)
 
+    tts_response = result['answer']
+
+    response = dwani.Audio.speech(input=tts_response, response_format="wav", language="english")
+
+    tts_filename = "output_english.wav"
+    with open(tts_filename, "wb") as f:
+        f.write(response)
+    print("Audio Speech: Output saved to output_english.wav")
+
+    playsound(tts_filename)

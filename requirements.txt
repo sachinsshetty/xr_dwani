@@ -2,3 +2,4 @@ opencv-python
 dwani
 sounddevice
 scipy
+playsound
