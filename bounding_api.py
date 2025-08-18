@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from ultralytics import YOLO
 import cv2
 import numpy as np
-import io
 
 app = FastAPI()
 
@@ -16,14 +15,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model = YOLO("yolov8n.pt")
+#model = YOLO("yolov8n.pt")
+model = YOLO("yolov8l.pt")  # example for large model with better accuracy
+
 
 def read_imagefile(file) -> np.ndarray:
-    # Read file content as bytes
     image_bytes = file.file.read()
-    # Convert bytes data to np array
     np_arr = np.frombuffer(image_bytes, np.uint8)
-    # Decode image
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
     if image is None:
         raise HTTPException(status_code=400, detail="Invalid image")
@@ -38,11 +36,11 @@ async def detect(image_file: UploadFile = File(...)):
         boxes = result.boxes
         for box in boxes:
             x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
-            confidence = box.conf.cpu().numpy().item()
-            class_id = int(box.cls.cpu())
+            confidence = float(box.conf.cpu().numpy().item())
+            class_id = int(box.cls.cpu().numpy().item())
             label = model.names[class_id]
             detections.append({
-                "box": [x1, y1, x2, y2],
+                "box": [int(x1), int(y1), int(x2), int(y2)],
                 "confidence": confidence,
                 "class_id": class_id,
                 "label": label
@@ -57,8 +55,8 @@ async def detect_image(image_file: UploadFile = File(...)):
         boxes = result.boxes
         for box in boxes:
             x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
-            confidence = box.conf.cpu().numpy().item()
-            class_id = int(box.cls.cpu())
+            confidence = float(box.conf.cpu().numpy().item())
+            class_id = int(box.cls.cpu().numpy().item())
             label = model.names[class_id]
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(image, f"{label} {confidence:.2f}", (x1, y1 - 10),
