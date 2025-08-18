@@ -26,9 +26,15 @@ def read_imagefile(file) -> np.ndarray:
     if image is None:
         raise HTTPException(status_code=400, detail="Invalid image")
     return image
+from typing import List, Optional
+from fastapi import Query
+
 
 @app.post("/detect/")
-async def detect(image_file: UploadFile = File(...)):
+async def detect(
+    image_file: UploadFile = File(...),
+    label_filter: Optional[List[str]] = Query(None, description="Filter to only include detections matching any of these labels")
+):
     image = read_imagefile(image_file)
     results = model(image)
     detections = []
@@ -39,27 +45,36 @@ async def detect(image_file: UploadFile = File(...)):
             confidence = float(box.conf.cpu().numpy().item())
             class_id = int(box.cls.cpu().numpy().item())
             label = model.names[class_id]
-            detections.append({
-                "box": [int(x1), int(y1), int(x2), int(y2)],
-                "confidence": confidence,
-                "class_id": class_id,
-                "label": label
-            })
+            if confidence > 0.9:
+                if label_filter is None or any(f.lower() in label.lower() for f in label_filter):
+                    detections.append({
+                        "box": [x1, y1, x2, y2],
+                        "confidence": confidence,
+                        "class_id": class_id,
+                        "label": label
+                    })
     return {"detections": detections}
 
+
 @app.post("/detect-image/")
-async def detect_image(image_file: UploadFile = File(...)):
+async def detect_image(
+    image_file: UploadFile = File(...),
+    label_filter: Optional[List[str]] = Query(None, description="Filter to only show labels containing any of these strings")
+):
     image = read_imagefile(image_file)
     results = model(image)
     for result in results:
         boxes = result.boxes
         for box in boxes:
-            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
             confidence = float(box.conf.cpu().numpy().item())
             class_id = int(box.cls.cpu().numpy().item())
             label = model.names[class_id]
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(image, f"{label} {confidence:.2f}", (x1, y1 - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+            if confidence > 0.9:
+                if label_filter is None or any(f.lower() in label.lower() for f in label_filter):
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
+                    cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.putText(image, f"{label} {confidence:.2f}", (x1, y1 - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
     _, img_encoded = cv2.imencode('.jpg', image)
     return Response(content=img_encoded.tobytes(), media_type="image/jpeg")
