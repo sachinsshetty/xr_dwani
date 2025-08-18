@@ -6,3 +6,6 @@ playsound
 pytz
 pygobject
 ultralytics
+fastapi
+uvicorn
+python-multipart

@@ -37,6 +37,10 @@ git clone https://github.com/IDEA-Research/Grounded-Segment-Anything.git
 
 
 python -m pip install -e segment_anything
+pip install python-multipart
+
+uvicorn bounding_api:app --reload
+
 
 pip install torch wheel
 pip install --no-build-isolation -e GroundingDINO
