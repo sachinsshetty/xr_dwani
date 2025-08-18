@@ -7,6 +7,7 @@ pyautogenvenv/
 venv/
 *.png
 *.wav
+*.pt
 venv_2
 # Byte-compiled / optimized / DLL files
 __pycache__/
