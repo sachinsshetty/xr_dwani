@@ -49,18 +49,21 @@ def capture_audio(audio_file_name):
 if __name__ == "__main__":
     file_name = "photo_description.png"
 
-    # Step 1: Take a picture
-    if not take_picture(filename=file_name):
-        exit()
 
     # Step 2: Load and convert image to bytes
 
-    audio_file_name = "input_audio.wav"
-    capture_audio(audio_file_name)
+    #audio_file_name = "input_audio.wav"
+    #capture_audio(audio_file_name)
     #capture 3 second audio file in wav format and send it here
-    asr_result = dwani.ASR.transcribe(file_path=audio_file_name, language="english")
+    #asr_result = dwani.ASR.transcribe(file_path=audio_file_name, language="english")
 
-    print(asr_result)
+    #print(asr_result)
+
+
+        # Step 1: Take a picture
+    if not take_picture(filename=file_name):
+        exit()
+
     result = dwani.Vision.caption_direct(
                 file_path=file_name,
                 query="Describe this image , answer in only one line. Do not explain",

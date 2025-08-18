@@ -3,3 +3,5 @@ dwani
 sounddevice
 scipy
 playsound
+pytz
+pygobject
