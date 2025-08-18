@@ -56,3 +56,17 @@ pip install -e ./recognize-anything/
 
 
 wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+
+
+---
+
+
+wget https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_small.pt
+
+wget https://github.com/sachinsshetty/segment-anything-2/blob/main/sam2_configs/sam2_hiera_s.yaml
+
+
+pip install git+https://github.com/sachinsshetty/segment-anything-2.git
+
+
+python same_example.py
