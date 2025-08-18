@@ -1,2 +1,11 @@
 opencv-python
-openai
+dwani
+sounddevice
+scipy
+playsound
+pytz
+pygobject
+ultralytics
+fastapi
+uvicorn
+python-multipart
