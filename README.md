@@ -26,3 +26,29 @@ pip install supervision transformers
 pip install torch torchvision opencv-python git+https://github.com/facebookresearch/segment-anything.git
 
 wget -q https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+
+
+wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+
+---
+
+
+git clone https://github.com/IDEA-Research/Grounded-Segment-Anything.git
+
+
+python -m pip install -e segment_anything
+
+pip install torch wheel
+pip install --no-build-isolation -e GroundingDINO
+
+pip install  opencv-python pycocotools matplotlib onnxruntime onnx ipykernel
+
+pip install --upgrade diffusers[torch]
+
+git clone https://github.com/xinyu1205/recognize-anything.git
+pip install -r ./recognize-anything/requirements.txt
+pip install -e ./recognize-anything/
+
+
+
+wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
