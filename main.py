@@ -2,7 +2,7 @@ import dwani
 import os 
 from playsound import playsound
 
-
+import cv2
 import sounddevice as sd
 from scipy.io.wavfile import write
 
@@ -10,7 +10,6 @@ from scipy.io.wavfile import write
 
 dwani.api_key = os.getenv("DWANI_API_KEY")
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
-
 
 
 def capture_audio(audio_file_name):
@@ -53,9 +52,95 @@ def step_2():
 
 
 
+import requests
+
+def send_image_get_modified(image_path):
+    url = 'https://api.dwani.ai/detect-image/'
+    params = {
+        'confidence_threshold': 0.9,
+        'top_k': 5
+    }
+    files = {
+        'image_file': (image_path, open(image_path, 'rb'), 'image/jpeg')
+    }
+    headers = {
+        'accept': 'application/json'
+    }
+
+    response = requests.post(url, params=params, headers=headers, files=files)
+    
+    if response.status_code == 200:
+        # Assuming the API returns the modified image content directly
+        return response.content
+    else:
+        raise Exception(f"Request failed with status code {response.status_code}: {response.text}")
+
+
+import requests
+
+def send_image_get_detection(image_path):
+    url = 'https://api.dwani.ai/detect/'
+    params = {
+        'confidence_threshold': 0.9,
+        'top_k': 5
+    }
+    files = {
+        'image_file': (image_path, open(image_path, 'rb'), 'image/jpeg')
+    }
+    headers = {
+        'accept': 'application/json'
+    }
+
+    response = requests.post(url, params=params, headers=headers, files=files)
+
+    if response.status_code == 200:
+        detection_data = response.json()
+        # Extract labels from the detection data
+        labels = [item['label'] for item in detection_data.get('predictions', [])]
+        return labels
+    else:
+        raise Exception(f"Request failed with status code {response.status_code}: {response.text}")
+    
 
 def step_3():
     print("step3")
+
+    image_file_name = " image_capture.png"
+
+    take_picture(image_file_name)
+
+    
+    modified_image = send_image_get_modified(image_file_name)
+    with open('modified_image.jpg', 'wb') as f:
+         f.write(modified_image)
+
+
+    detection_result = send_image_get_detection(image_file_name)
+    print(detection_result)
+
+
+
+
+def take_picture(filename: str) -> bool:
+    """Capture a single image from the webcam."""
+    cam = cv2.VideoCapture(0)
+
+    if not cam.isOpened():
+        print("Cannot open camera")
+        return False
+
+    ret, frame = cam.read()
+
+    if ret:
+        cv2.imwrite(filename, frame)
+        print(f"Photo captured and saved as {filename}")
+    else:
+        print("Failed to capture image")
+
+    cam.release()
+    return ret
+
+
 
 def step_4():
     print("step4")
