@@ -93,11 +93,14 @@ def send_image_get_detection(image_path, confidence_threshold=0.7, top_k=3):
 
     response = requests.post(url, params=params, headers=headers, files=files)
 
-    print(response)
     if response.status_code == 200:
         detection_data = response.json()
+        #print(detection_data)
+
+        labels = [detection['label'] for detection in detection_data['detections']]
+        #print("Detected labels:", labels)
         # Extract labels from the detection data
-        labels = [item['label'] for item in detection_data.get('predictions', [])]
+        #labels = [item['label'] for item in detection_data.get('predictions', [])]
         return labels
     else:
         raise Exception(f"Request failed with status code {response.status_code}: {response.text}")
