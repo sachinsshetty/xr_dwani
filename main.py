@@ -26,12 +26,10 @@ def capture_audio(audio_file_name):
     write(audio_file_name, fs, myrecording)  # Save as WAV file
     print(f"Saved as {audio_file_name}")
 
-def step_1():
+def step_1(tts_request):
     print("step1")
 
-    tts_response = "Who dares enter my kingdom"
-
-    response = dwani.Audio.speech(input=tts_response, response_format="wav", language="english")
+    response = dwani.Audio.speech(input=tts_request, response_format="wav", language="english")
 
     tts_filename = "output_english.wav"
     with open(tts_filename, "wb") as f:
@@ -51,6 +49,7 @@ def step_2():
 
     print(asr_result)
 
+    return asr_result['text']
 
 
 import requests
@@ -143,8 +142,15 @@ def take_picture(filename: str) -> bool:
 
 
 
-def step_4():
+def step_4(reponse_to_question):
     print("step4")
+
+    print(reponse_to_question)
+
+    reposnse = dwani.chat.direct(prompt=reponse_to_question)
+    print(reposnse)
+    return reposnse['response']
+
 
 def step_5():
     print("step5")
@@ -156,10 +162,18 @@ def step_7():
     print("step7")
 
 if __name__ == "__main__":
-    step_1()
-    step_2()
-    step_3()
-    step_4()
+
+    tts_request = "Who dares enter my kingdom"
+
+    step_1(tts_request=tts_request)
+    voice_text = step_2()
+
+
+    #step_3()
+    system_reponse = step_4(voice_text)
+
+    step_1(system_reponse)
     step_5()
+
     step_6()
     step_7()
