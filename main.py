@@ -12,6 +12,9 @@ dwani.api_key = os.getenv("DWANI_API_KEY")
 dwani.api_base = os.getenv("DWANI_API_BASE_URL")
 
 
+import sounddevice as sd
+
+
 def capture_audio(audio_file_name):
     fs = 44100  # Sample rate
     seconds = 3  # Duration of recording
@@ -22,8 +25,6 @@ def capture_audio(audio_file_name):
 
     write(audio_file_name, fs, myrecording)  # Save as WAV file
     print(f"Saved as {audio_file_name}")
-
-
 
 def step_1():
     print("step1")
@@ -54,11 +55,11 @@ def step_2():
 
 import requests
 
-def send_image_get_modified(image_path):
+def send_image_get_modified(image_path, confidence_threshold=0.7, top_k=3):
     url = 'https://api.dwani.ai/detect-image/'
     params = {
-        'confidence_threshold': 0.9,
-        'top_k': 5
+        'confidence_threshold': confidence_threshold,
+        'top_k': top_k
     }
     files = {
         'image_file': (image_path, open(image_path, 'rb'), 'image/jpeg')
@@ -78,11 +79,11 @@ def send_image_get_modified(image_path):
 
 import requests
 
-def send_image_get_detection(image_path):
+def send_image_get_detection(image_path, confidence_threshold=0.7, top_k=3):
     url = 'https://api.dwani.ai/detect/'
     params = {
-        'confidence_threshold': 0.9,
-        'top_k': 5
+        'confidence_threshold': confidence_threshold,
+        'top_k': top_k
     }
     files = {
         'image_file': (image_path, open(image_path, 'rb'), 'image/jpeg')
