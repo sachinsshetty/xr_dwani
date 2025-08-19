@@ -97,7 +97,9 @@ def send_image_get_detection(image_path, confidence_threshold=0.7, top_k=3):
         detection_data = response.json()
         #print(detection_data)
 
-        labels = [detection['label'] for detection in detection_data['detections']]
+        #labels = [detection['label'] for detection in detection_data['detections']]
+
+        labels = list(set(detection['label'] for detection in detection_data['detections']))
         #print("Detected labels:", labels)
         # Extract labels from the detection data
         #labels = [item['label'] for item in detection_data.get('predictions', [])]
