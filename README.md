@@ -1,7 +1,8 @@
 ## XR _ DWANI
 
-sudo apt update
-sudo apt install libgirepository1.0-dev
+
+
+
 
 
 python3.12 -m venv venv
@@ -10,7 +11,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 
-python vision_ai.py
+python main.py
 
 
 
@@ -26,6 +27,10 @@ uvicorn bounding_api:app --reload
 
 <!-- 
 --
+sudo apt update
+sudo apt install libgirepository1.0-dev
+
+
 
 pip install supervision transformers
 
