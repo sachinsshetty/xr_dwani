@@ -93,6 +93,7 @@ def send_image_get_detection(image_path, confidence_threshold=0.7, top_k=3):
 
     response = requests.post(url, params=params, headers=headers, files=files)
 
+    print(response)
     if response.status_code == 200:
         detection_data = response.json()
         # Extract labels from the detection data
@@ -147,7 +148,7 @@ def step_4(reponse_to_question):
 
     print(reponse_to_question)
 
-    reposnse = dwani.chat.direct(prompt=reponse_to_question)
+    reposnse = dwani.chat.direct(prompt=reponse_to_question,model="gemma3", system_prompt="keep the response conscise to one line. Do not explain, Ask a funny trivia")
     print(reposnse)
     return reposnse['response']
 
@@ -169,7 +170,7 @@ if __name__ == "__main__":
     voice_text = step_2()
 
 
-    #step_3()
+    step_3()
     system_reponse = step_4(voice_text)
 
     step_1(system_reponse)
