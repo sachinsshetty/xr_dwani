@@ -10,7 +10,9 @@ venv/
 *.pt
 *.jpeg
 *.pth
+*.jpg
 venv_2
+*.mp3
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
